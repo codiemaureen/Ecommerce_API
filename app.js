@@ -3,15 +3,19 @@ require('express-async-errors');
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const routes = require('./routes/index');
+const authRouter = require('./routes/authRouter');
 //database
 const connectDB = require('./db/connect');
 
 app.use(morgan('tiny'));
 app.use(express.json());
 
+app.get('/', (req,res) => {
+    res.send('E-Commerce')
+})
+
 //routes
-app.use('/', routes);   
+app.use('/api/v1/auth', authRouter);   
 
 //middleware
 const notFoundMiddleware = require('./middleware/not-found');
