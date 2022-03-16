@@ -2,10 +2,12 @@ require('dotenv').config();
 require('express-async-errors'); 
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
 const routes = require('./routes/index');
 //database
 const connectDB = require('./db/connect');
 
+app.use(morgan('tiny'));
 app.use(express.json());
 
 //routes
