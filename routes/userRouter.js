@@ -6,8 +6,8 @@ router.route('/').get(userController.getAllUsers);
 
 
 router.route('/showMe').get(userController.showCurrentUser);
-router.route('/updateUser').get(userController.updateUser);
-router.route('/updateUserPassword').get(userController.upateUserPassword);
+router.route('/updateUser').patch(userController.updateUser);
+router.route('/updateUserPassword').patch(userController.upateUserPassword);
 
 
 router.route('/:id').get(userController.getSingleUser);

@@ -14,7 +14,7 @@ exports.showCurrentUser = async (req, res) => {
 };
 exports.updateUser = async (req, res) => {
     const user = await User.findOneAndUpdate({});
-    res.send('Update user');
+    res.send(req.body);
 };
 exports.upateUserPassword = async (req, res) => {
     const user = await User.find({});
