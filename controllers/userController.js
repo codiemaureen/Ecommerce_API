@@ -16,3 +16,7 @@ exports.updateUser = async (req, res) => {
     const user = await User.findOneAndUpdate({});
     res.send('Update user');
 };
+exports.upateUserPassword = async (req, res) => {
+    const user = await User.find({});
+    res.send('update password');
+};
