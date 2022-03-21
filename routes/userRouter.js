@@ -4,7 +4,8 @@ const userController = require('../controllers/userController');
 const {authenticateUser} = require('../middleware/authentication');  
 const {authorizePermissions} = require('../middleware/authentication');  
 
-router.route('/').get(authenticateUser, authorizePermissions, userController.getAllUsers);
+router.route('/')
+.get(authenticateUser, authorizePermissions('admin', 'owner'), userController.getAllUsers);
 
 
 router.route('/showMe').get(userController.showCurrentUser);
