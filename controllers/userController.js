@@ -1,6 +1,7 @@
 const User = require("../models/User")
 const {StatusCodes} = require('http-status-codes');
-const { CustomAPIError } = require("../errors");
+const CustomError = require("../errors");
+const {createTokenUser, attachCookiesToResponse} = require('../utils');
 
 
 exports.getAllUsers = async (req, res) => {
@@ -11,7 +12,7 @@ exports.getAllUsers = async (req, res) => {
 exports.getSingleUser = async (req, res) => {
     const user = await User.findOne({_id:req.params.id}).select('-password');
     if(!user){
-        throw new CustomAPIError.NotFoundError(`No user found with id ${req.params.id}`)
+        throw new CustomError.NotFoundError(`No user found with id ${req.params.id}`)
     };
         res.status(StatusCodes.OK).json({user});
 };
@@ -20,9 +21,23 @@ exports.showCurrentUser = async (req, res) => {
 
 };
 exports.updateUser = async (req, res) => {
-    const user = await User.findOneAndUpdate({});
-    res.send(req.body);
+    const { email, name } = req.body;
+    if(!email || !name){
+        throw new CustomError.BadRequestError('Please provide name and email')
+    }
+
+    const user = await User.findOneAndUpdate(
+        {_id:req.user.userId}, 
+        {email,name}, 
+        {new:true, runValidators: true}
+    );
+    const tokenUser = createTokenUser(user);
+    attachCookiesToResponse({res, user: tokenUser});
+    res.status(StatusCodes.OK).json({user: tokenUser});
+
 };
+
+
 exports.upateUserPassword = async (req, res) => {
     const {oldPassword, newPassword}  = req.body;
     if(!oldPassword || !newPassword ) {

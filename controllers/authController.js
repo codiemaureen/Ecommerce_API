@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const {StatusCodes} = require('http-status-codes');
 const CustomError = require('../errors');
-const {attachCookiesToResponse} = require('../utils');
+const {attachCookiesToResponse, createTokenUser} = require('../utils');
 
 
 exports.register = async(req, res) => {
@@ -14,7 +14,7 @@ exports.register = async(req, res) => {
     const isFirstAccount = await User.countDocuments({}) === 0;
     const role = isFirstAccount ? 'admin' : 'user';
     const user = await User.create({name, email, password, role});
-    const tokenUser = {name: user.name, userId: user._id, role: user.role};
+    const tokenUser = createTokenUser(user);
     attachCookiesToResponse({res, user: tokenUser});
     res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
@@ -38,9 +38,9 @@ exports.login = async(req, res) => {
     if(!isPasswordCorrect){
         throw new CustomError.UnauthenticatedError('Invalid credentials');
     };
-    const tokenUser = {name: user.name, userId: user._id, role: user.role};
+    const tokenUser = createTokenUser(user);
     attachCookiesToResponse({res, user: tokenUser});
-    res.status(StatusCodes.CREATED).json({ user: tokenUser })
+    res.status(StatusCodes.OK).json({ user: tokenUser })
 };
 exports.logout = async(req, res) => {
     res.cookie('token', 'logout', {
