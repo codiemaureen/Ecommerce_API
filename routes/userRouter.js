@@ -10,7 +10,7 @@ router.route('/')
 
 router.route('/showMe').get(authenticateUser, userController.showCurrentUser);
 router.route('/updateUser').patch(userController.updateUser);
-router.route('/updateUserPassword').patch(userController.upateUserPassword);
+router.route('/updateUserPassword').patch(authenticateUser, userController.upateUserPassword);
 
 
 router.route('/:id').get(userController.getSingleUser);
