@@ -16,8 +16,8 @@ exports.getSingleUser = async (req, res) => {
         res.status(StatusCodes.OK).json({user});
 };
 exports.showCurrentUser = async (req, res) => {
-    const users = await User.find({id:user_id});
-    res.send('Show current user');
+    res.status(StatusCodes.OK).json({user: req.user});
+
 };
 exports.updateUser = async (req, res) => {
     const user = await User.findOneAndUpdate({});

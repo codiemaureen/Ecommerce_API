@@ -8,7 +8,7 @@ router.route('/')
 .get(authenticateUser, authorizePermissions('admin', 'owner'), userController.getAllUsers);
 
 
-router.route('/showMe').get(userController.showCurrentUser);
+router.route('/showMe').get(authenticateUser, userController.showCurrentUser);
 router.route('/updateUser').patch(userController.updateUser);
 router.route('/updateUserPassword').patch(userController.upateUserPassword);
 
