@@ -1,27 +1,32 @@
 const User = require("../models/User")
 const {StatusCodes} = require('http-status-codes');
 const CustomError = require("../errors");
-const {createTokenUser, attachCookiesToResponse} = require('../utils');
+const {createTokenUser, attachCookiesToResponse, checkPermissions} = require('../utils');
 
 
 exports.getAllUsers = async (req, res) => {
-    const users = await User.find({role:'user'}).select('-password');
     console.log(req.user);
+    const users = await User.find({role:'user'}).select('-password');
     res.status(StatusCodes.OK).json({users});
 };
+
+
 exports.getSingleUser = async (req, res) => {
-    const user = await User.findOne({_id: req.params.id}).select('-password');
-    console.log(user);
+    const user = await User.findOne({ _id: req.params.id }).select('-password');
     if(!user){
-        throw new CustomError.NotFoundError(`No user found with id ${req.params.id}`)
-    }
+        throw new CustomError.NotFoundError(`No user found with id ${req.params.id}`);
+    };
     checkPermissions(req.user, user._id);
     res.status(StatusCodes.OK).json({ user });
 };
+
+
 exports.showCurrentUser = async (req, res) => {
     res.status(StatusCodes.OK).json({user: req.user});
 
 };
+
+
 exports.updateUser = async (req, res) => {
     const { email, name } = req.body;
     if(!email || !name){
