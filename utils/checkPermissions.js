@@ -1,7 +1,7 @@
 
 const CustomError = require('../errors');
 
-const chechPermissions = (requestUser, resourceUserId) => {
+const checKPermissions = (requestUser, resourceUserId) => {
   if (requestUser.role === 'admin') return;
   if (requestUser.userId === resourceUserId.toString()) return;
   throw new CustomError.UnauthorizedError(
@@ -9,4 +9,4 @@ const chechPermissions = (requestUser, resourceUserId) => {
   );
 };
 
-module.exports = chechPermissions;
+module.exports = checKPermissions;
