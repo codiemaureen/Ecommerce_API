@@ -16,8 +16,8 @@ exports.getSingleUser = async (req, res) => {
     if(!user){
         throw new CustomError.NotFoundError(`No user found with id ${req.params.id}`);
     };
-    checkPermissions(req.user, user._id);
-    res.status(StatusCodes.OK).json({ user });
+        checkPermissions(req.user, user._id);
+        res.status(StatusCodes.OK).json({ user });
 };
 
 
