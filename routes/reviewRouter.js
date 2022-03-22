@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  authenticateUser,
-  authorizePermissions,
+    authenticateUser,
 } = require('../middleware/authentication');
 
 const {
@@ -17,13 +16,13 @@ const {
 } = require('../controllers/reviewController');
 router
     .route('/')
-    .get(authenticateUser, authorizePermissions('admin'), getAllReviews)
-    .post(createReview)
+    .post(authenticateUser, createReview)
+    .get(getAllReviews)
 
 router
     .route('/:id')
-    .get(authenticateUser, authorizePermissions('admin'), getSingleReview)
-    .patch(authenticateUser, authorizePermissions('admin'), updateReview)
-    .delete(authenticateUser, authorizePermissions('admin'), deleteReview);
+    .get(authenticateUser, getSingleReview)
+    .patch(authenticateUser, updateReview)
+    .delete(authenticateUser, deleteReview);
 
 module.exports = router;
