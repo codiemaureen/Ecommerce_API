@@ -5,16 +5,18 @@ const {createTokenUser, attachCookiesToResponse} = require('../utils');
 
 
 exports.getAllUsers = async (req, res) => {
-    console.log(req.user);
     const users = await User.find({role:'user'}).select('-password');
+    console.log(req.user);
     res.status(StatusCodes.OK).json({users});
 };
 exports.getSingleUser = async (req, res) => {
-    const user = await User.findOne({_id:req.params.id}).select('-password');
+    const user = await User.findOne({_id: req.params.id}).select('-password');
+    console.log(user);
     if(!user){
         throw new CustomError.NotFoundError(`No user found with id ${req.params.id}`)
-    };
-        res.status(StatusCodes.OK).json({user});
+    }
+    checkPermissions(req.user, user._id);
+    res.status(StatusCodes.OK).json({ user });
 };
 exports.showCurrentUser = async (req, res) => {
     res.status(StatusCodes.OK).json({user: req.user});
@@ -26,11 +28,10 @@ exports.updateUser = async (req, res) => {
         throw new CustomError.BadRequestError('Please provide name and email')
     }
 
-    const user = await User.findOneAndUpdate(
-        {_id:req.user.userId}, 
-        {email,name}, 
-        {new:true, runValidators: true}
-    );
+    const user = await User.findOne({ _id: req.user.userId});
+    user.email = email;
+    user.name = name;
+    await user.save();
     const tokenUser = createTokenUser(user);
     attachCookiesToResponse({res, user: tokenUser});
     res.status(StatusCodes.OK).json({user: tokenUser});
