@@ -34,4 +34,4 @@ const reviewSchema = new mongoose.Schema({
 //only one review per user
 reviewSchema.index({product:1, user:1}, {unique: true});
 
-model.exports = mongoose.model('Review', reviewSchema);
+module.exports = mongoose.model('Review', reviewSchema);

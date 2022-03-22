@@ -9,6 +9,7 @@ const fileUpload = require('express-fileupload');
 const authRouter = require('./routes/authRouter');
 const userRouter = require('./routes/userRouter');
 const productRouter = require('./routes/productRouter');
+const reviewRouter = require('./routes/reviewRouter');
 
 //database
 const connectDB = require('./db/connect');
@@ -30,6 +31,7 @@ app.get('/api/v1', (req,res) => {
 app.use('/api/v1/auth', authRouter);   
 app.use('/api/v1/users', userRouter);   
 app.use('/api/v1/products', productRouter);   
+app.use('/api/v1/reviews', reviewRouter);   
 
 //middleware
 const notFoundMiddleware = require('./middleware/not-found');
