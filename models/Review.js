@@ -31,6 +31,8 @@ const reviewSchema = new mongoose.Schema({
     {timestamps: true}
 );
 
+
+
 //only one review per user
 reviewSchema.index({product:1, user:1}, {unique: true});
 
