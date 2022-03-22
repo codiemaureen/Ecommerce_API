@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 
 const authRouter = require('./routes/authRouter');
 const userRouter = require('./routes/userRouter');
@@ -16,6 +17,8 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.static('./public'));
+app.use(fileUpload());
+
 
 
 app.get('/api/v1', (req,res) => {
