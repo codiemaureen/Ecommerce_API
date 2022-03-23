@@ -12,8 +12,28 @@ const productRouter = require('./routes/productRouter');
 const reviewRouter = require('./routes/reviewRouter');
 const orderRouter = require('./routes/orderRouter');
 
+const rateLimiter = require('express-rate-limit');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const cors = require('cors');
+const mongoSanitize = require('express-mongo-sanitize');
+
 //database
 const connectDB = require('./db/connect');
+
+
+app.set('trust proxy', 1);
+app.use(rateLimiter({
+    windowMs: 15 * 60 * 1000;
+    max: 60
+})
+);
+
+app.use(helmet());
+app.use(cors());
+app.use(xss());
+app.use(mongoSanitize());
+
 
 app.use(morgan('tiny'));
 app.use(express.json());
@@ -38,6 +58,9 @@ app.use('/api/v1/orders', orderRouter);
 //middleware
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+
+app.set('trust ')
+
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
